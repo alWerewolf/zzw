@@ -1,6 +1,6 @@
 - title : Хакатон
 - description : Introduction to React Native with F#
-- author : Беляков Алексей
+- author : Беляков Алексей, Подрезов Александр, Чудаков Тимофей
 - theme : night
 - transition : default
 
@@ -12,7 +12,7 @@
 ## Blockchain для передачи файлов
 <br/>
 <br/>
-DM
+Команда DM
 <br/>
 НОЯБРЬ 2018
 
