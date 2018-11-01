@@ -14,254 +14,84 @@
 <br/>
 DM
 <br/>
-ОКТЯБРЬ 2018
+НОЯБРЬ 2018
 
 ***
 
-## Ссылки | References
-- https://www.ibm.com/blogs/blockchain/2018/05/securing-your-cross-domain-file-transfers-with-blockchain/
+## Первичная регистрация участников.
 
-<br />
+<br/>
 
-' Заметка 1
-' Заметка 2
+---
+
+*   Генерация приватного и публичного ключей участника
+*   Создание нового блока и добавление его в репозиторий публичных ключей
+'   Отправка информации в подсеть о своем присутствии
+
+---
+
+' *   Блок содержит
+'   *   уникальный hash пользователя
+'    *   Идентификатор: e-mail пользователя
+'    *   публичный ключ пользователя 
+<img src="images/task12-0.png" width="700"/>    
 
 ***
 
-### Modern mobile app development?
-
-* UI/UX
-    * "Native mobile apps"
-    * Performance
-* Tooling
-    * Hot loading
-    * IntelliSense
-* Maintainability
-    * Easy to debug
-    * Correctness
+## Регистрация интеллектуальной собственности.
 
 ---
 
-### "Native" UI
-
- <img src="images/meter.png" style="background: transparent; border-style: none;"  width=300 />
+* Генерация публичного и приватного ключа для файла
+<img src="images/task12-1.png" width="700"/>    
 
 ---
 
-### Tooling
+* Шифрование файла публичным ключом
+* Добавление публичного ключа в репозиторий публичных ключей. Идентификатор: хэш файла
+* Добавление информации о файле в репозиторий файлов
 
-<img src="images/hotloading.gif" style="background: transparent; border-style: none;"  />
+---
+
+###
+
+ <img src="images/task12-2.png" style="background: transparent; border-style: none;"  width=700 />
 
 *** 
 
-### Model - View - Update
+## Механизм взаимодействия между участниками сети.
 
-#### "Elm - Architecture"
+---
 
- <img src="images/Elm.png" style="background: white;" width=700 />
+* Заинтересованный участник, регистрирует свое желание в получении файла, создавая запись в репозитории контрактов. Производится холдирование средств.
 
-
- <small>http://danielbachler.de/2016/02/11/berlinjs-talk-about-elm.html</small>
-
+<img src="images/task12-3.png" style="background: transparent; border-style: none;"  width=700 />
 
 --- 
 
-### Model - View - Update
+* После загрузки и проверки файла, получатель создает очередной блок в котором регистрирует информацию о том, что файл им полностью получен
+* Данный блок является фиксацией того, что файл получен, и того, что получатель ждет от владельца ключ доступа к файлу.
 
-    // MODEL
-
-    type Model = int
-
-    type Msg =
-    | Increment
-    | Decrement
-
-    let init() : Model = 0
+<img src="images/task12-4.png" style="background: transparent; border-style: none;"  width=700 />
 
 ---
 
-### Model - View - Update
+* Владелец файла, получив информацию о полной загрузке файла получателм, создает следующий блок в который помещает информацию с приватным ключом к файлу, зашифрованным публичным ключом получателя. 
 
-    // VIEW
-
-    let view model dispatch =
-        div []
-            [ button [ OnClick (fun _ -> dispatch Decrement) ] [ str "-" ]
-              div [] [ str (model.ToString()) ]
-              button [ OnClick (fun _ -> dispatch Increment) ] [ str "+" ] ]
+<img src="images/task12-5.png" style="background: transparent; border-style: none;"  width=600 />
 
 ---
 
-### Model - View - Update
+* Получатель информации фиксирует в репозитории факт получения ключа.
 
-    // UPDATE
-
-    let update (msg:Msg) (model:Model) =
-        match msg with
-        | Increment -> model + 1
-        | Decrement -> model - 1
-
----
-
-### Model - View - Update
-
-    // wiring things up
-
-    Program.mkSimple init update view
-    |> Program.withConsoleTrace
-    |> Program.withReact "elmish-app"
-    |> Program.run
-
----
-
-### Model - View - Update
-
-# Demo
+<img src="images/task12-6.png" style="background: transparent; border-style: none;"  width=600 />
 
 ***
-
-### Sub-Components
-
-    // MODEL
-
-    type Model = {
-        Counters : Counter.Model list
-    }
-
-    type Msg = 
-    | Insert
-    | Remove
-    | Modify of int * Counter.Msg
-
-    let init() : Model =
-        { Counters = [] }
-
----
-
-### Sub-Components
-
-    // VIEW
-
-    let view model dispatch =
-        let counterDispatch i msg = dispatch (Modify (i, msg))
-
-        let counters =
-            model.Counters
-            |> List.mapi (fun i c -> Counter.view c (counterDispatch i)) 
-        
-        div [] [ 
-            yield button [ OnClick (fun _ -> dispatch Remove) ] [  str "Remove" ]
-            yield button [ OnClick (fun _ -> dispatch Insert) ] [ str "Add" ] 
-            yield! counters ]
-
----
-
-### Sub-Components
-
-    // UPDATE
-
-    let update (msg:Msg) (model:Model) =
-        match msg with
-        | Insert ->
-            { Counters = Counter.init() :: model.Counters }
-        | Remove ->
-            { Counters = 
-                match model.Counters with
-                | [] -> []
-                | x :: rest -> rest }
-        | Modify (id, counterMsg) ->
-            { Counters =
-                model.Counters
-                |> List.mapi (fun i counterModel -> 
-                    if i = id then
-                        Counter.update counterMsg counterModel
-                    else
-                        counterModel) }
-
----
-
-### Sub-Components
-
-# Demo
-
-***
-
-### React
-
-* Facebook library for UI 
-* <code>state => view</code>
-* Virtual DOM
-
----
-
-### Virtual DOM - Initial
-
-<br />
-<br />
-
-
- <img src="images/onchange_vdom_initial.svg" style="background: white;" />
-
-<br />
-<br />
-
- <small>http://teropa.info/blog/2015/03/02/change-and-its-detection-in-javascript-frameworks.html</small>
-
----
-
-### Virtual DOM - Change
-
-<br />
-<br />
-
-
- <img src="images/onchange_vdom_change.svg" style="background: white;" />
-
-<br />
-<br />
-
- <small>http://teropa.info/blog/2015/03/02/change-and-its-detection-in-javascript-frameworks.html</small>
-
----
-
-### Virtual DOM - Reuse
-
-<br />
-<br />
-
-
- <img src="images/onchange_immutable.svg" style="background: white;" />
-
-<br />
-<br />
-
- <small>http://teropa.info/blog/2015/03/02/change-and-its-detection-in-javascript-frameworks.html</small>
-
-
-*** 
-
-### ReactNative
-
- <img src="images/ReactNative.png" style="background: white;" />
-
-
- <small>http://timbuckley.github.io/react-native-presentation</small>
-
-***
-
-### Show me the code
-
-*** 
-
-### TakeAways
-
-* Learn all the FP you can!
-* Simple modular design
-
-*** 
 
 ### Спасибо за внимание!
 
-* https://github.com/fable-compiler/fable-elmish
-* https://ionide.io
-* https://facebook.github.io/react-native/
+---
+
+##Справочная информация
+
+* https://www.ibm.com/blogs/blockchain/2018/05/securing-your-cross-domain-file-transfers-with-blockchain/
